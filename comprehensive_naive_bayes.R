@@ -43,7 +43,46 @@ confusionMatrix(Predict, testing$Classifier)
 X <- varImp(model)
 plot(X)
 
-#Laplace Correction
+
+# Reduction the number of variables ---------------------------------------
+
+red.work.data <- data[c('Publication.Year', 'Count.of.Simple.Family.Members', 'Count.of.Cites.Patents',
+                    'Simple.Legal.Status', 'Count.of.claims', 'Quality.of.Family', 'Classifier')]
+
+#Building a model
+#split data into training and test data sets
+red.indxTrain <- createDataPartition(y = red.work.data$Classifier, p = 0.7, list = F)
+red.training <- red.work.data[indxTrain, ]
+red.testing <- red.work.data[-indxTrain, ]
+
+#Check dimensions of the split
+prop.table(table(red.work.data$Classifier))*100
+
+prop.table(table(red.training$Classifier))*100
+prop.table(table(red.testing$Classifier))*100
+
+#create objects x which holds the predictor variables and y which holds the response variables
+red.x = red.training[,-7]
+red.y = red.training$Classifier
+
+library(e1071)
+red.model = train(red.x,red.y,'nb',trControl=trainControl(method='LOOCV',number=10))
+red.model
+
+#Model Evaluation
+#Predict testing set
+red.Predict <- predict(red.model, newdata = red.testing)
+
+#Get the confusion matrix to see accuracy value and other parameter values
+confusionMatrix(red.Predict, red.testing$Classifier)
+
+#Plot Variable performance
+X <- varImp(model)
+plot(X)
+
+
+# Laplace correction ------------------------------------------------------
+
 patent.classifier <- naiveBayes(training[, -12], training$Classifier)
 patent.pred <- predict(patent.classifier, testing)
 #confusionMatrix(patent.pred, testing$Classifier)
@@ -56,7 +95,8 @@ gmodels::CrossTable(up.patent.pred, testing$Classifier, prop.chisq = F, chisq = 
 confusionMatrix(up.patent.pred, testing$Classifier)
 
 
-#Principal component analysis
+# PCA ---------------------------------------------------------------------
+
 pca.work.data <- work.data[c('Publication.Year', 'Count.of.Simple.Family.Members', 'Simple.Family.Cited.by.Count',
                            'Count.of.Other.References', 'Count.of.Cited.by.Patents', 'Count.of.Cites.Patents',
                            'Count.of.Cited.by.Patents.Within.3.years', 'Count.of.Cited.by.Patents.Within.5.years', 
@@ -72,7 +112,8 @@ biplot(pca.data)
 pca.data$scores[1:10,]
 
 
-#Exploratory Factor Analysis
+# Exploratory Factor Analysis ---------------------------------------------
+
 #Using PCA we've determined 3 factors - Comp 1, Comp 2 and Comp 3
 pcaFac <- factanal(pca.work.data, factors = 5, rotation = 'varimax')
 pcaFac
