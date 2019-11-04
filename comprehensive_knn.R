@@ -65,4 +65,4 @@ for (i in 1:51){
       ')
    }
 #Accuracy plot
-plot(k.optm, type="b", xlab="K- Value",ylab="Accuracy level")
+plot(1:i, k.optm, type="b", xlab="K- Value",ylab="Accuracy level")
