@@ -29,7 +29,7 @@ svm.testing <- svm.work.data[-svm.indxTrain, ]
 
 svm.training[['Classifier']] = factor(svm.training[["Classifier"]])
 #Training a model
-svm.traincontrol <- trainControl(method = 'repeatedcv', number = 10, repeats = 4)
+svm.traincontrol <- trainControl(method = 'repeatedcv', num ber = 10, repeats = 4)
 svm_linear <- train(Classifier ~., data = svm.training, method = 'svmLinear', trControl = svm.traincontrol,
                     preProcess = c('center', 'scale'), tuneLength = 10)
 svm_linear
