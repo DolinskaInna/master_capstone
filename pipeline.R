@@ -15,9 +15,21 @@ work.data <- data[c('Publication.Year', 'Count.of.Simple.Family.Members', 'Simpl
 'Count.of.Other.References', 'Count.of.Cited.by.Patents', 'Count.of.Cites.Patents', 'Count.of.Cited.by.Patents.Within.3.years',
 'Count.of.Cited.by.Patents.Within.5.years', 'Simple.Legal.Status', 'Count.of.claims', 'Quality.of.Family',
 'Classifier')]
+indxTrain <- createDataPartition(y = svm.work.data$Classifier, p = 0.7, list = F)
+
 work.data$Publication.Year <- 2020-work.data$Publication.Year
 str(work.data)
 describe(work.data)
+
+work.data <- fastDummies::dummy_cols(work.data, select_columns = c('Simple.Legal.Status', 'Quality.of.Family'))
+work.data$Simple.Legal.Status <- NULL
+work.data$Quality.of.Family <- NULL
+work.data$Simple.Legal.Status_ <- NULL
+work.data$Main.IPC.Subclass <- NULL
+work.data$Classifier <- as.character(work.data$Classifier)
+work.data$Classifier[work.data$Classifier == "Strong"] <- 1
+work.data$Classifier[work.data$Classifier == "Weak"] <- 0
+classifier <- work.data$Classifier
 
 #visualize the missing data
 missmap(work.data)

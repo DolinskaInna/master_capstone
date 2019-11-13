@@ -17,7 +17,6 @@
 work.data$Classifier <- as.factor(work.data$Classifier)
 work.data <- na.omit(work.data)
 set.seed(123)
-indxTrain <- createDataPartition(y = work.data$Classifier, p = 0.7, list = F)
 training <- work.data[indxTrain, ]
 testing <- work.data[-indxTrain, ]
 
@@ -28,7 +27,7 @@ prop.table(table(training$Classifier))*100
 prop.table(table(testing$Classifier))*100
 
 #create objects x which holds the predictor variables and y which holds the response variables
-x = training[,-12]
+x = training[,-10]
 y = training$Classifier
 
 library(e1071)

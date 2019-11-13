@@ -6,13 +6,14 @@ knn.work.data <- na.omit(work.data)
 
 #Building a model
 #split data into training and test data sets
-knn.indxTrain <- createDataPartition(y = work.data$Classifier, p = 0.7, list = F)
-knn.training <- knn.work.data[knn.indxTrain, -12]
-knn.testing <- knn.work.data[-knn.indxTrain, -12]
+#knn.indxTrain <- createDataPartition(y = work.data$Classifier, p = 0.7, list = F)
+knn.indTrain <- indxTrain
+knn.training <- knn.work.data[knn.indxTrain, -10]
+knn.testing <- knn.work.data[-knn.indxTrain, -10]
 
 #Creating seperate dataframe for 'Classifier' feature which is our target.
-train.knn.labels <- knn.work.data[knn.indxTrain,12]
-test.knn.labels <-knn.work.data[-knn.indxTrain,12]
+train.knn.labels <- knn.work.data[knn.indxTrain,10]
+test.knn.labels <-knn.work.data[-knn.indxTrain,10]
 
 library(class)
 sqrt(NROW(train.knn.labels))
@@ -20,20 +21,19 @@ sqrt(NROW(train.knn.labels))
 #The square root of 2593 is around 50.92, therefore we’ll create two models. 
 #One with ‘K’ value as 50 and the other model with a ‘K’ value as 51.
 knn.50 <- knn(train=knn.training, test=knn.testing, cl=train.knn.labels, k=50)
-knn.51 <- knn(train=knn.training, test=knn.testing, cl=train.knn.labels, k=51)
+
 
 #Model Evaluation
 #Calculate the proportion of correct classification for k = 26, 27
 ACC.50 <- 100 * sum(test.knn.labels == knn.50)/NROW(test.knn.labels)
-ACC.51 <- 100 * sum(test.knn.labels == knn.51)/NROW(test.knn.labels)
+
 
 # Check prediction against actual value in tabular form for k=50
 table(knn.50 ,test.knn.labels)
-# Check prediction against actual value in tabular form for k=51
-table(knn.51 ,test.knn.labels)
+
 
 confusionMatrix(table(knn.50, test.knn.labels))
-confusionMatrix(table(knn.51, test.knn.labels))
+
 
 #Optimization
 i=1

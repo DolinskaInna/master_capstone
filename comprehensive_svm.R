@@ -5,7 +5,7 @@ svm.work.data <- work.data
 
 #Building a model
 #split data into training and test data sets
-svm.indxTrain <- createDataPartition(y = svm.work.data$Classifier, p = 0.7, list = F)
+svm.indxTrain <- indxTrain
 svm.training <- svm.work.data[svm.indxTrain, ]
 svm.testing <- svm.work.data[-svm.indxTrain, ]
 
